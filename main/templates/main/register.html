@@ -18,10 +18,16 @@
         {{form.password2}}
         <input style="margin-top:10px ;" class="button" type="submit" value="Register">
     </form>
+
+    {% for message in messages %}
+        {% if form.errors %}
+            <p id="messages" style="color: red;">{{message}}</p>
+        {% else %}
+            <p id="messages" style="color: whitesmoke;">{{message}}</p>
+        {% endif %}
+    {% endfor %}
+
     <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
 </div>
-
-
-
 
 {% endblock content %}

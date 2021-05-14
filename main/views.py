@@ -38,12 +38,9 @@ def register_page(request):
         if request.method == 'POST':
             form = CreateUserForm(request.POST)
             if form.is_valid():
-                user = form.save()
+                form.save()
                 username = form.cleaned_data.get('username')
-                # group = Group.objects.get(name='client')
-                # user.groups.add(group)
-                # Customer.objects.create(user=user)
-                # messages.success(request, 'Account created for ' + username + ' successfully')
+                messages.success(request, 'Account created for ' + username + ' successfully')
                 return redirect('login')
             else:
                 messages.error(request, 'Account created unsuccessfully')
@@ -56,18 +53,15 @@ def home(request):
     #tasks = Task.objects.all()
     tasks = request.user.task_set.all()
     #print('task theo user : ', tasks1)
-
     form = TaskForm()
-
     my_filter = TaskFilter(request.GET, queryset=tasks)
-    print(my_filter.data)
     #search_key = my_filter.data.get('name')
     tasks = my_filter.qs
 
     context = {'tasks':tasks, 
                 'form':form,
                 'my_filter':my_filter,
-                #'search_key':search_key
+                # 'search_key':search_key
                 }
     return render(request, 'main/list.html', context)
 
@@ -84,7 +78,6 @@ def create_task(request):
             data.update({'user': request.user})
             Task.objects.create(**data)
         return redirect('home')
-
     context = {'form':form}
     return render(request, 'main/create_task.html', context)
 
@@ -92,38 +85,29 @@ def create_task(request):
 @login_required(login_url='login')
 def detail_task(request, pk):
     task = Task.objects.get(id=pk)
-
     form = TaskForm(instance=task)
-
     context = {'form':form}
-
     return render(request, 'main/detail_task.html', context)
 
 
 @login_required(login_url='login')
 def update_task(request, pk):
     task = Task.objects.get(id=pk)
-
     form = TaskForm(instance=task)
-
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid:
             form.save()
         return redirect('home')
-
     context = {'form':form}
-
     return render(request, 'main/update_task.html', context)
 
 
 @login_required(login_url='login')
 def delete_task(request, pk):
     item = Task.objects.get(id=pk)
-
     if request.method == 'POST':
         item.delete()
         return redirect('home')
-
     context = {'item':item}
     return render(request, 'main/delete_task.html', context)
