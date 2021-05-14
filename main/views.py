@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
+from .filters import *
 
 
 def login_page(request):
@@ -58,7 +59,16 @@ def home(request):
 
     form = TaskForm()
 
-    context = {'tasks':tasks, 'form':form}
+    my_filter = TaskFilter(request.GET, queryset=tasks)
+    print(my_filter.data)
+    #search_key = my_filter.data.get('name')
+    tasks = my_filter.qs
+
+    context = {'tasks':tasks, 
+                'form':form,
+                'my_filter':my_filter,
+                #'search_key':search_key
+                }
     return render(request, 'main/list.html', context)
 
 

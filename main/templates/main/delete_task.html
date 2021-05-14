@@ -1,3 +1,5 @@
+{% extends 'main/main.html' %}
+{% block content %}
 <p>Are you sure want to delete {{item}} ?</p>
 
 <a href="{% url 'home' %}">Cancel</a>
@@ -6,3 +8,4 @@
     {% csrf_token %}
     <input type="submit" name="" value="Confirm">
 </form>
+{% endblock content %}

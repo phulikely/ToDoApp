@@ -1,3 +1,5 @@
+{% extends 'main/main.html' %}
+{% block content %}
 <h3>Update Task</h3>
 
 <a href="{% url 'home' %}">Back</a>
@@ -9,3 +11,4 @@
 
     <input type="submit" name="update_task">
 </form>
+{% endblock content %}
