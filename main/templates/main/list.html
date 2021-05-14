@@ -7,25 +7,25 @@
 {% endif %}
 
 <hr>
-<h3>ToDo List Apps</h3>
 
-<form method="POST" action="">
-    {% csrf_token %}
-    {{form.as_p}}
-    <input type="submit" name="create_task"> 
-</form>
+<h1>My To Do List</h1>
 
-{% for task in tasks %}
-    <div>
-        <a href="{% url 'update_task' task.id %}">Update</a>
-        <a href="{% url 'delete_task' task.id %}">Delete</a>
+<a href="{% url 'create_task' %}">Add Task</a>
 
-        {% if task.complete == True %}
-            <strike>{{task}}</strike>
-        {% else %}
-            <span>{{task}}</span>
-        {% endif %}
-
-
-    </div>
-{% endfor %}
+<table>
+    <tr>
+        <th>Item</th>
+        <th></th>
+        <th></th>
+    </tr>
+    {% for task in tasks %}
+    <tr>
+        <td>{{task.title}}</td>
+        <td><a href="{% url 'detail_task' task.id %}">View</a></td>
+        <td><a href="{% url 'update_task' task.id %}">Update</a></td>
+        <td><a href="{% url 'delete_task' task.id %}">Delete</a></td>
+    </tr>
+    {% empty %}
+    <h3>No items in list</h3>
+    {% endfor %}
+</table>

@@ -1,11 +1,9 @@
-<h3>Update Task</h3>
+<h3>Create Task</h3>
 
 <a href="{% url 'home' %}">Back</a>
 
 <form method="POST" action="">
     {% csrf_token %}
-
     {{form.as_p}}
-
-    <input type="submit" name="update_task">
+    <input type="submit" name="create_task"> 
 </form>
