@@ -19,13 +19,11 @@
         <input style="margin-top:10px ;" class="button" type="submit" value="Register">
     </form>
 
-    {% for message in messages %}
+    <div style="color: red;">
         {% if form.errors %}
-            <p id="messages" style="color: red;">{{message}}</p>
-        {% else %}
-            <p id="messages" style="color: whitesmoke;">{{message}}</p>
-        {% endif %}
-    {% endfor %}
+        <p id="messages" class="messages">{{form.errors}}</p>
+    {% endif %}
+    </div>
 
     <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
 </div>
