@@ -42,8 +42,8 @@ def register_page(request):
                 username = form.cleaned_data.get('username')
                 messages.success(request, 'Account created for ' + username + ' successfully')
                 return redirect('login')
-            else:
-                messages.error(request, 'Account created unsuccessfully')
+            # else:
+            #     messages.error(request, 'Account created unsuccessfully')
         context = {'form':form}
         return render(request, 'main/register.html', context)
 
