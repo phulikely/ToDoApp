@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import re
 from .models import *
 from .forms import *
 from .filters import *
@@ -34,17 +35,39 @@ def register_page(request):
     if request.user.is_authenticated:
         return redirect('home')
     else:
+        error_msg = ''
         form = CreateUserForm()
         if request.method == 'POST':
             form = CreateUserForm(request.POST)
-            if form.is_valid():
+            # if form.is_valid():
+            #     form.save()
+            #     username = form.cleaned_data.get('username')
+            #     messages.success(request, 'Account created for ' + username + ' successfully')
+            #     return redirect('login')
+
+            username = request.POST.get('username')
+            password1 = request.POST.get('password1')
+            password2 = request.POST.get('password2')
+            reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,}$"
+            pat = re.compile(reg)
+            mat = re.search(pat, password1)
+            user_by_name = User.objects.filter(username=username)
+
+            if user_by_name.exists():
+                error_msg = 'Account already exists !'
+            elif password1 != password2:
+                error_msg = 'Passwords do not match !'
+            elif not mat:
+                error_msg = 'Password should have number, uppercase, lowercase, special symbol and from 8 chacracters long'
+            else:
                 form.save()
                 username = form.cleaned_data.get('username')
                 messages.success(request, 'Account created for ' + username + ' successfully')
                 return redirect('login')
-            # else:
-            #     messages.error(request, 'Account created unsuccessfully')
-        context = {'form':form}
+
+        context = {'form':form,
+                    'error_msg':error_msg,
+        }
         return render(request, 'main/register.html', context)
 
 

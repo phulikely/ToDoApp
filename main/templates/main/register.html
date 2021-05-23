@@ -20,9 +20,7 @@
     </form>
 
     <div style="color: red;">
-        {% if form.errors %}
-        <p id="messages" class="messages">{{form.errors}}</p>
-    {% endif %}
+        <p id="messages" class="messages">{{error_msg}}</p>
     </div>
 
     <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
