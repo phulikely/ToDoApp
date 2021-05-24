@@ -91,8 +91,8 @@ def home(request):
 
 @login_required(login_url='login')
 def create_task(request):
-    user_logined = User.objects.get(username=request.user)
-    form = TaskForm(initial={'user':user_logined})
+    #user_logined = User.objects.get(username=request.user)
+    form = TaskForm(initial={'user':request.user})
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
