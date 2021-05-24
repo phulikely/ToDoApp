@@ -7,7 +7,8 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = '__all__'
-        exclude = ['user']
+        # exclude = ['user']
+        widgets = {'user': forms.HiddenInput()}
 
 class CreateUserForm(UserCreationForm):
     class Meta:

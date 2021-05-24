@@ -91,15 +91,12 @@ def home(request):
 
 @login_required(login_url='login')
 def create_task(request):
-    #user = request.user
-    form = TaskForm()
+    user_logined = User.objects.get(username=request.user)
+    form = TaskForm(initial={'user':user_logined})
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
-            # form.save()
-            data = dict.copy(form.cleaned_data)
-            data.update({'user': request.user})
-            Task.objects.create(**data)
+            form.save()
         return redirect('home')
     context = {'form':form}
     return render(request, 'main/create_task.html', context)
