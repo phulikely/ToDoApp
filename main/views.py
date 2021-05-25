@@ -39,31 +39,31 @@ def register_page(request):
         form = CreateUserForm()
         if request.method == 'POST':
             form = CreateUserForm(request.POST)
-            # if form.is_valid():
-            #     form.save()
-            #     username = form.cleaned_data.get('username')
-            #     messages.success(request, 'Account created for ' + username + ' successfully')
-            #     return redirect('login')
-
-            username = request.POST.get('username')
-            password1 = request.POST.get('password1')
-            password2 = request.POST.get('password2')
-            reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,}$"
-            pat = re.compile(reg)
-            mat = re.search(pat, password1)
-            user_by_name = User.objects.filter(username=username)
-
-            if user_by_name.exists():
-                error_msg = 'Account already exists !'
-            elif password1 != password2:
-                error_msg = 'Passwords do not match !'
-            elif not mat:
-                error_msg = 'Password should have number, uppercase, lowercase, special symbol and from 8 chacracters long'
-            else:
+            if form.is_valid():
                 form.save()
                 username = form.cleaned_data.get('username')
                 messages.success(request, 'Account created for ' + username + ' successfully')
                 return redirect('login')
+
+            # username = request.POST.get('username')
+            # password1 = request.POST.get('password1')
+            # password2 = request.POST.get('password2')
+            # reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,}$"
+            # pat = re.compile(reg)
+            # mat = re.search(pat, password1)
+            # user_by_name = User.objects.filter(username=username)
+
+            # if user_by_name.exists():
+            #     error_msg = 'Account already exists !'
+            # elif password1 != password2:
+            #     error_msg = 'Passwords do not match !'
+            # elif not mat:
+            #     error_msg = 'Password should have number, uppercase, lowercase, special symbol and from 8 chacracters long'
+            # else:
+            #     form.save()
+            #     username = form.cleaned_data.get('username')
+            #     messages.success(request, 'Account created for ' + username + ' successfully')
+            #     return redirect('login')
 
         context = {'form':form,
                     'error_msg':error_msg,
