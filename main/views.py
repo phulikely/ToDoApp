@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import re
 from .models import *
 from .forms import *
 from .filters import *
@@ -34,6 +35,7 @@ def register_page(request):
     if request.user.is_authenticated:
         return redirect('home')
     else:
+        error_msg = ''
         form = CreateUserForm()
         if request.method == 'POST':
             form = CreateUserForm(request.POST)
@@ -42,9 +44,30 @@ def register_page(request):
                 username = form.cleaned_data.get('username')
                 messages.success(request, 'Account created for ' + username + ' successfully')
                 return redirect('login')
-            else:
-                messages.error(request, 'Account created unsuccessfully')
-        context = {'form':form}
+
+            # username = request.POST.get('username')
+            # password1 = request.POST.get('password1')
+            # password2 = request.POST.get('password2')
+            # reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,}$"
+            # pat = re.compile(reg)
+            # mat = re.search(pat, password1)
+            # user_by_name = User.objects.filter(username=username)
+
+            # if user_by_name.exists():
+            #     error_msg = 'Account already exists !'
+            # elif password1 != password2:
+            #     error_msg = 'Passwords do not match !'
+            # elif not mat:
+            #     error_msg = 'Password should have number, uppercase, lowercase, special symbol and from 8 chacracters long'
+            # else:
+            #     form.save()
+            #     username = form.cleaned_data.get('username')
+            #     messages.success(request, 'Account created for ' + username + ' successfully')
+            #     return redirect('login')
+
+        context = {'form':form,
+                    'error_msg':error_msg,
+        }
         return render(request, 'main/register.html', context)
 
 
@@ -68,15 +91,12 @@ def home(request):
 
 @login_required(login_url='login')
 def create_task(request):
-    #user = request.user
-    form = TaskForm()
+    #user_logined = User.objects.get(username=request.user)
+    form = TaskForm(initial={'user':request.user})
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
-            # form.save()
-            data = dict.copy(form.cleaned_data)
-            data.update({'user': request.user})
-            Task.objects.create(**data)
+            form.save()
         return redirect('home')
     context = {'form':form}
     return render(request, 'main/create_task.html', context)
